@@ -1,0 +1,560 @@
+@import 'variables.css';
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    color: var(--black-1);
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    width: 100%;
+    background-color: var(--gray-1);
+}
+
+.layout-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 20px;
+    height: 100%;
+    width: 100%;
+    background-color: var(--white-2);
+}
+
+/* #card-graph {
+    max-width: 800px;
+    margin: 0 auto;
+} */
+
+.card {
+    width: 100%;
+    min-height: 600px;
+    height: auto;
+    background-color: var(--white-1);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px 0 var(--black-5);
+}
+
+.card-title {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 100;
+    color: var(--black-1);
+    padding: 7px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 var(--black-5);
+    background-color: var(--white-1);
+}
+
+.card-graph-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 600px;
+    gap: 10px;
+    background-color: var(--white-3);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px 0 var(--black-5);
+}
+
+.card-graph-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.card-graph-body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.btn-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--white-1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid var(--black-5);
+    box-shadow: 0 2px 4px var(--black-6);
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--black-2);
+    font-weight: 500;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231C1C1C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+}
+
+.btn-select:hover {
+    border-color: var(--black-3);
+    background-color: var(--white-2);
+}
+
+.btn-select:focus {
+    outline: none;
+    border-color: var(--purple-a);
+    box-shadow: 0 0 0 2px var(--purple-50);
+}
+
+.card-graph-title-text {
+    font-family: var(--font-family);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--black-1);
+    letter-spacing: 0.5px;
+    margin-right: 16px;
+}
+
+/* Layout padrão para potência ativa (uma coluna) */
+.line {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Layout específico para temperaturas (duas colunas) */
+.card-temperature-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--white-3);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px 0 var(--black-5);
+}
+.card-temperature-content .line {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.line-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.line-title-text {
+    font-family: var(--font-family);
+    font-size: 16px;
+    color: var(--black-2);
+    font-weight: 700;
+    line-height: 1.2;
+}
+.line-title-value-max {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--black-2);
+    background-color: var(--green-b);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.line-value {
+    display: flex;
+    align-items: center;
+    background-color: var(--purple);
+    border-radius: 4px;
+    height: 19px;
+}
+
+.line-value-bar {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.line-title-value {
+    margin-left: 10px;
+    padding: 4px 8px;
+    background-color: var(--green-a);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.card-graph-footer {
+    color: var(--black-2);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Temperaturas */
+
+/* Container individual de temperatura */
+.card-temperature-content .container-temperatura {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 1px;
+    width: 100%;
+    background: var(--white-1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--black-6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-temperature-content .container-temperatura:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--black-5);
+}
+
+/* Área de descrição do mancal */
+.card-temperature-content .describe {
+    width: 100%;
+    /* margin-bottom: 8px; */
+}
+
+.card-temperature-content .mancal-guia {
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 120%;
+    color: var(--black-1);
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 8px 12px;
+    background: var(--purple-50);
+    border-radius: 6px;
+    border-left: 4px solid var(--primary);
+}
+
+/* Container principal da barra de temperatura */
+.card-temperature-content .bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 15px;
+    width: 100%;
+    background: var(--purple);
+    box-shadow: 0px 4px 8px var(--black-5);
+    border-radius: 8px;
+}
+
+/* Container das barras de histórico */
+.card-temperature-content .bar-temp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 8px;
+    gap: 4px;
+    flex: 1;
+    height: 80px;
+    background: var(--purple);
+    border-radius: 4px;
+}
+
+/* Barra individual */
+.card-temperature-content .bars {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    gap: 2px;
+    width: 16px;
+    flex: none;
+}
+
+/* Retângulo da barra */
+.card-temperature-content .rectangle {
+    width: 4px;
+    background: #FF4747;
+    border-radius: 2px;
+    flex: none;
+    order: 0;
+    min-height: 20px;
+}
+
+/* Círculo no topo da barra */
+.card-temperature-content .ellipse {
+    width: 4px;
+    height: 4px;
+    background: #50C9F6;
+    border-radius: 50%;
+    flex: none;
+    order: 1;
+}
+
+/* Label de tempo */
+.card-temperature-content .time-label {
+    width: 16px;
+    height: auto;
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 8px;
+    line-height: 110%;
+    color: var(--black-1);
+    text-align: center;
+    flex: none;
+    order: 2;
+    margin-top: 4px;
+}
+
+/* Container dos valores de temperatura */
+.card-temperature-content .temperaturas {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    gap: 2px;
+    width: 60px;
+    flex: none;
+}
+
+/* Temperatura atual (rosa) */
+.card-temperature-content .atual {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    width: 100%;
+    height: 24px;
+    background-color: #E8A5B8;
+    border-radius: 4px;
+}
+
+/* Temperatura de alarme (amarelo) */
+.card-temperature-content .alarme {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    width: 100%;
+    height: 24px;
+    background-color: var(--yellow);
+    border-radius: 4px;
+}
+
+/* Temperatura de trip (azul) */
+.card-temperature-content .trip {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    width: 100%;
+    height: 24px;
+    background-color: var(--blue-a);
+    border-radius: 4px;
+}
+
+/* Texto dos valores de temperatura */
+.card-temperature-content .text-value {
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 100%;
+    color: var(--black-1);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Classes auxiliares (mantidas para compatibilidade) */
+.value {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+    gap: 10px;
+    width: 49px;
+    height: 18px;
+    background: #C7A7B6;
+    border-radius: 2px;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.temp-value {
+    width: 43px;
+    height: 12px;
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0.5px;
+    color: var(--black-2);
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.setpoint-label {
+    width: 41px;
+    height: 10px;
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 100%;
+    letter-spacing: 0.5px;
+    color: var(--black-2);
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+}
+
+.setpoint {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+    gap: 10px;
+    width: 49px;
+    height: 18px;
+    background: var(--blue-a);
+    border-radius: 2px;
+    flex: none;
+    order: 3;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.setpoint-value {
+    width: 43px;
+    height: 12px;
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0.5px;
+    color: var(--black-2);
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+/* Responsividade para componente de temperatura */
+@media (max-width: 1400px) {
+    .card-temperature-content .line {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .card-graph-title-text {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .layout-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-temperature-content .line {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .card-temperature-content .bar {
+        padding: 8px;
+        gap: 12px;
+    }
+    
+    .card-temperature-content .bar-temp {
+        height: 70px;
+    }
+}
+
+@media (max-width: 900px) {
+    .card-temperature-content .line {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .card-temperature-content .container-temperatura {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .layout-cards {
+        gap: 15px;
+        padding: 10px;
+    }
+    
+    .card {
+        min-height: 500px;
+    }
+    
+    .card-graph-title-text {
+        font-size: 20px;
+    }
+    
+    .card-temperature-content .line {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .card-temperature-content .bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .card-temperature-content .bar-temp {
+        height: 60px;
+        width: 100%;
+    }
+    
+    .card-temperature-content .temperaturas {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .card-temperature-content .atual, 
+    .card-temperature-content .alarme, 
+    .card-temperature-content .trip {
+        flex: 1;
+        margin: 0 2px;
+        height: 30px;
+    }
+    
+    .card-temperature-content .mancal-guia {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+}

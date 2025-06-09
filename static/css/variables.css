@@ -1,0 +1,89 @@
+:root {
+    /* Cores Principais */
+    --green-a: #A1E3CB;
+    --green-b: #BAEDBD;
+    --purple-a: #95A4FC;
+    --purple-b: #C6C7F8;
+    --blue-a: #A8C5DA;
+    --blue-b: #B1E3FF;
+
+    /* Tons de Preto com Opacidade */
+    --black-1: #343434;
+    --black-2: #1C1C1Ccc; /* 80% */
+    --black-3: #1C1C1C66; /* 40% */
+    --black-4: #1C1C1C33; /* 20% */
+    --black-5: #1C1C1C1A; /* 10% */
+    --black-6: #1C1C1C0D; /* 5% */
+
+    /* Tons de Branco com Opacidade */
+    --white-1: #FFFFFF;
+    --white-2: #FFFFFFcc; /* 80% */
+    --white-3: #FFFFFF66; /* 40% */
+    --white-4: #FFFFFF33; /* 20% */
+    --white-5: #FFFFFF1A; /* 10% */
+    --white-6: #FFFFFF0D; /* 5% */
+
+    /* Cores Complementares */
+    --light: #F7F9FB;
+    --blue: #E3F5FF;
+    --purple: #E5ECF6;
+    --purple-50: #E5ECF680; /* 50% */
+    --brand: #000000;
+    --yellow: #FFE999;
+    --red: #f3b3b3;
+    --primary: #3A608F;
+
+    /* font-family */
+    --font-family: 'Roboto', sans-serif;
+}
+
+/* Classes de Utilidade para Cores de Fundo */
+.bg-green-a { background-color: var(--green-a); }
+.bg-green-b { background-color: var(--green-b); }
+.bg-purple-a { background-color: var(--purple-a); }
+.bg-purple-b { background-color: var(--purple-b); }
+.bg-blue-a { background-color: var(--blue-a); }
+.bg-blue-b { background-color: var(--blue-b); }
+
+/* Classes para Tons de Preto */
+.bg-black-1 { background-color: var(--black-1); }
+.bg-black-2 { background-color: var(--black-2); }
+.bg-black-3 { background-color: var(--black-3); }
+.bg-black-4 { background-color: var(--black-4); }
+.bg-black-5 { background-color: var(--black-5); }
+.bg-black-6 { background-color: var(--black-6); }
+
+/* Classes para Tons de Branco */
+.bg-white-1 { background-color: var(--white-1); }
+.bg-white-2 { background-color: var(--white-2); }
+.bg-white-3 { background-color: var(--white-3); }
+.bg-white-4 { background-color: var(--white-4); }
+.bg-white-5 { background-color: var(--white-5); }
+.bg-white-6 { background-color: var(--white-6); }
+
+/* Classes para Cores Complementares */
+.bg-light { background-color: var(--light); }
+.bg-blue { background-color: var(--blue); }
+.bg-purple { background-color: var(--purple); }
+.bg-purple-50 { background-color: var(--purple-50); }
+.bg-brand { background-color: var(--brand); }
+.bg-yellow { background-color: var(--yellow); }
+.bg-red { background-color: var(--red); }
+
+/* Classes de Utilidade para Cores de Texto */
+.text-green-a { color: var(--green-a); }
+.text-green-b { color: var(--green-b); }
+.text-purple-a { color: var(--purple-a); }
+.text-purple-b { color: var(--purple-b); }
+.text-blue-a { color: var(--blue-a); }
+.text-blue-b { color: var(--blue-b); }
+.text-black-1 { color: var(--black-1); }
+.text-black-2 { color: var(--black-2); }
+.text-black-3 { color: var(--black-3); }
+.text-white-1 { color: var(--white-1); }
+.text-light { color: var(--light); }
+.text-blue { color: var(--blue); }
+.text-purple { color: var(--purple); }
+.text-brand { color: var(--brand); }
+.text-yellow { color: var(--yellow); }
+.text-red { color: var(--red); } 

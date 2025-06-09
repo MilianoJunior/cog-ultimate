@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<!-- <div class="container"> -->
+    <div class="layout-cards">
+        <div id="card-graph">
+            <div id="card-graph-content">
+                {{ html_potencia_ativa | safe }}
+            </div>
+        </div>
+        <div id="card-temperature">
+            <div id="card-temperature-content">
+                {{ html_temperature | safe }}
+            </div>
+        </div>
+    </div>
+<!-- </div> -->
+{% endblock %}

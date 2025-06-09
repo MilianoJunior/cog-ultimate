@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Temperaturas - Moderno com Anomalias</title>
+    <style>
+        :root {
+            --color-bg-page: #2c3e50; /* Azul escuro para o fundo da página */
+            --color-bg-frame: #34495e; /* Azul um pouco mais claro para a moldura */
+            --color-bg-dashboard: #ecf0f1; /* Cinza muito claro para o painel */
+            --color-text-header: #2c3e50;
+            --color-text-card-title: #34495e;
+            --color-text-normal: #2c3e50;
+            --color-text-dimmed: #7f8c8d;
+
+            --status-normal-bg: #2ecc71; /* Verde */
+            --status-normal-text: #ffffff;
+            --status-normal-flash: #e8f5e9; /* Verde muito claro */
+
+            --status-warning-bg: #f39c12; /* Laranja */
+            --status-warning-text: #ffffff;
+            --status-warning-flash: #fff3e0; /* Laranja muito claro */
+
+            --status-critical-bg: #e74c3c; /* Vermelho */
+            --status-critical-text: #ffffff;
+            --status-critical-flash: #ffebee; /* Vermelho muito claro */
+
+            --font-main: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-bg-page);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .component-frame {
+            background-color: var(--color-bg-frame);
+            border-radius: 24px;
+            padding: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .dashboard-container {
+            background-color: var(--color-bg-dashboard);
+            border-radius: 16px;
+            padding: 25px 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-text-header);
+            margin: 0;
+        }
+
+        .time-selector select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            background-color: white;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-header);
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .chart-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Para a barra de status não vazar */
+            transition: background-color 300ms ease-in-out, border-left-color 300ms ease-in-out;
+            border-left: 8px solid transparent; /* Barra de status inicial */
+        }
+        
+        /* Estilos de Status */
+        .chart-card.status-normal { border-left-color: var(--status-normal-bg); }
+        .chart-card.status-warning { border-left-color: var(--status-warning-bg); }
+        .chart-card.status-critical { border-left-color: var(--status-critical-bg); }
+
+        /* Efeito de flash por status */
+        .chart-card.flash.status-normal { background-color: var(--status-normal-flash); }
+        .chart-card.flash.status-warning { background-color: var(--status-warning-flash); }
+        .chart-card.flash.status-critical { background-color: var(--status-critical-flash); }
+
+
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .chart-card-title {
+            font-size: 16px;
+            font-weight: 700; /* Mais destaque para o título */
+            color: var(--color-text-card-title);
+            margin: 0;
+        }
+        
+        .card-status-info {
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        .status-normal .card-status-info { color: var(--status-normal-bg); }
+        .status-warning .card-status-info { color: var(--status-warning-bg); }
+        .status-critical .card-status-info { color: var(--status-critical-bg); }
+
+
+        .card-body {
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column; /* Alterado para empilhar gráfico e temperaturas */
+            flex-grow: 1;
+        }
+        
+        .main-temp-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .current-temp-value {
+            font-size: 36px; /* Temperatura atual bem grande */
+            font-weight: 700;
+            line-height: 1;
+        }
+        .status-normal .current-temp-value { color: var(--status-normal-bg); }
+        .status-warning .current-temp-value { color: var(--status-warning-bg); }
+        .status-critical .current-temp-value { color: var(--status-critical-bg); }
+
+
+        .temp-details {
+            text-align: right;
+        }
+
+        .setpoint-info, .deviation-info {
+            font-size: 13px;
+            color: var(--color-text-dimmed);
+        }
+        .setpoint-info span, .deviation-info span {
+            font-weight: 500;
+            color: var(--color-text-normal);
+        }
+        .deviation-info.positive { color: var(--status-warning-bg); } /* Ou critical se for muito alto */
+        .deviation-info.negative { color: var(--status-warning-bg); } /* Ou critical se for muito baixo */
+         .status-critical .deviation-info { color: var(--status-critical-bg) !important; font-weight: bold; }
+
+
+        .bar-graph-area {
+            width: 100%; /* Ocupa toda a largura */
+            margin-top: 10px;
+        }
+
+        .bar-graph-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 80px; /* Altura do gráfico reduzida */
+        }
+
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            width: calc(100% / 7 - 3px);
+            height: 100%;
+            position: relative;
+            padding-bottom: 18px;
+        }
+
+        .bar {
+            width: 50%;
+            border-radius: 3px 3px 0 0;
+        }
+        /* Cor da barra baseada no status do card */
+        .status-normal .bar { background-color: var(--status-normal-bg); opacity: 0.7; }
+        .status-warning .bar { background-color: var(--status-warning-bg); opacity: 0.8; }
+        .status-critical .bar { background-color: var(--status-critical-bg); }
+
+
+        .bar-item::after { /* Ponto */
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: #bdc3c7; /* Ponto mais sutil */
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .bar-time {
+            font-size: 9px;
+            color: var(--color-text-dimmed);
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        /* Removendo os boxes de setpoint/actual separados, info integrada */
+
+        .bar-h1 { height: 60%; } .bar-h2 { height: 75%; } .bar-h3 { height: 30%; }
+        .bar-h4 { height: 95%; } .bar-h5 { height: 55%; } .bar-h6 { height: 40%; }
+        .bar-h7 { height: 70%; }
+
+    </style>
+</head>
+<body>
+    <div class="component-frame">
+        <div class="dashboard-container">
+            <div class="header">
+                <h1>Monitor de Temperaturas</h1>
+                <div class="time-selector">
+                    <select>
+                        <option value="realtime">Tempo Real</option>
+                        <option value="hourly">Última Hora</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="charts-grid" id="chartsGrid">
+                <!-- Cards serão gerados e inseridos aqui pelo JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chartsGrid = document.getElementById('chartsGrid');
+        const numberOfCards = 6;
+        let cardData = [];
+
+        const barClasses = ['bar-h1', 'bar-h2', 'bar-h3', 'bar-h4', 'bar-h5', 'bar-h6', 'bar-h7'];
+        const timeLabels = ['-6m', '-5m', '-4m', '-3m', '-2m', '-1m', 'AGORA']; // Tempo relativo
+
+        // --- Configurações de Anomalia ---
+        const SETPOINT_BASE = 69.0;
+        const NORMAL_DEVIATION = 4.0; // ±4.0°C do setpoint é Normal
+        const WARNING_DEVIATION = 8.0; // Além de ±4.0°C até ±8.0°C é Alerta
+        // Crítico é qualquer coisa além de ±8.0°C
+
+        function getStatusInfo(actualTemp, setpoint) {
+            const deviation = actualTemp - setpoint;
+            const absDeviation = Math.abs(deviation);
+
+            let status = 'normal';
+            let statusText = 'NORMAL';
+
+            if (absDeviation > WARNING_DEVIATION) {
+                status = 'critical';
+                statusText = 'CRÍTICO';
+            } else if (absDeviation > NORMAL_DEVIATION) {
+                status = 'warning';
+                statusText = 'ALERTA';
+            }
+            return { status, statusText, deviation };
+        }
+
+
+        function createCardElement(card) {
+            const cardDiv = document.createElement('div');
+            // Classes de status são adicionadas/removidas dinamicamente
+            cardDiv.classList.add('chart-card'); 
+            cardDiv.setAttribute('id', card.id);
+            cardDiv.setAttribute('data-current-temp', card.actualTemp.toFixed(1));
+
+            let barItemsHTML = '';
+            for (let i = 0; i < barClasses.length; i++) {
+                barItemsHTML += `
+                    <div class="bar-item">
+                        <div class="bar ${barClasses[i]}"></div>
+                        <div class="bar-time">${timeLabels[i]}</div>
+                    </div>
+                `;
+            }
+            // A cor do desvio será tratada por classes CSS
+            const deviationSign = card.deviation >= 0 ? '+' : '';
+            const deviationClass = card.deviation > 0 ? 'positive' : (card.deviation < 0 ? 'negative' : '');
+
+
+            cardDiv.innerHTML = `
+                <div class="card-header">
+                    <h3 class="chart-card-title">${card.title}</h3>
+                    <div class="card-status-info" id="status-text-${card.id}">${card.statusText}</div>
+                </div>
+                <div class="card-body">
+                    <div class="main-temp-display">
+                        <div class="current-temp-value" id="actual-temp-${card.id}">
+                            ${card.actualTemp.toFixed(1)}<small>°C</small>
+                        </div>
+                        <div class="temp-details">
+                            <div class="setpoint-info">Setpoint: <span>${card.setpoint.toFixed(1)}°C</span></div>
+                            <div class="deviation-info ${deviationClass}" id="deviation-info-${card.id}">
+                                Desvio: <span>${deviationSign}${card.deviation.toFixed(1)}°C</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-graph-area">
+                        <div class="bar-graph-container">
+                            ${barItemsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Define a classe de status inicial
+            cardDiv.classList.add(`status-${card.status}`);
+            return cardDiv;
+        }
+
+        function initializeCards() {
+            cardData = [];
+            for (let i = 0; i < numberOfCards; i++) {
+                // Simular algumas temperaturas iniciais variadas para ver os status
+                let initialTemp;
+                if (i === 0) initialTemp = SETPOINT_BASE + WARNING_DEVIATION + 1; // Crítico alto
+                else if (i === 1) initialTemp = SETPOINT_BASE - WARNING_DEVIATION -1; // Crítico baixo
+                else if (i === 2) initialTemp = SETPOINT_BASE + NORMAL_DEVIATION + 1; // Alerta alto
+                else if (i === 3) initialTemp = SETPOINT_BASE - NORMAL_DEVIATION -1; // Alerta baixo
+                else initialTemp = SETPOINT_BASE + (Math.random() - 0.5) * NORMAL_DEVIATION; // Normal
+
+                const statusInfo = getStatusInfo(initialTemp, SETPOINT_BASE);
+                cardData.push({
+                    id: `card-${i}`,
+                    title: `Sensor Mancal G${i + 1}`,
+                    setpoint: SETPOINT_BASE,
+                    actualTemp: initialTemp,
+                    status: statusInfo.status,
+                    statusText: statusInfo.statusText,
+                    deviation: statusInfo.deviation,
+                    barClasses: barClasses,
+                    timeLabels: timeLabels
+                });
+            }
+            renderCards();
+        }
+        
+        function renderCards() {
+            chartsGrid.innerHTML = '';
+            // Ordenar inicialmente por criticidade e depois por temperatura pode ser uma opção
+            // cardData.sort((a,b) => /* lógica de ordenação aqui */ ); 
+            cardData.forEach(card => {
+                const cardElement = createCardElement(card);
+                chartsGrid.appendChild(cardElement);
+            });
+        }
+
+        function updateTemperaturesAndReorder() {
+            cardData.forEach(card => {
+                // Simula variação mais realista, tendendo a voltar ao normal ou variar em torno do estado atual
+                let change = (Math.random() - 0.5) * 2.5; // Variação entre -1.25 e +1.25
+                if (card.status === 'critical') {
+                    change = (Math.random() - 0.6) * 3; // Tende a variar mais ou um pouco para normal
+                } else if (card.status === 'warning') {
+                     change = (Math.random() - 0.5) * 2;
+                }
+                card.actualTemp += change;
+                // Limites absolutos para não fugir demais
+                card.actualTemp = Math.max(SETPOINT_BASE - 15, Math.min(SETPOINT_BASE + 15, card.actualTemp)); 
+
+                const statusInfo = getStatusInfo(card.actualTemp, card.setpoint);
+                card.status = statusInfo.status;
+                card.statusText = statusInfo.statusText;
+                card.deviation = statusInfo.deviation;
+
+                const cardElement = document.getElementById(card.id);
+                if (cardElement) {
+                    // Remove classes de status antigas e adiciona a nova
+                    cardElement.classList.remove('status-normal', 'status-warning', 'status-critical', 'flash');
+                    cardElement.classList.add(`status-${card.status}`);
+                    
+                    // Adiciona a classe flash específica do status
+                    cardElement.classList.add('flash');
+
+                    cardElement.setAttribute('data-current-temp', card.actualTemp.toFixed(1));
+                    
+                    document.getElementById(`actual-temp-${card.id}`).innerHTML = `${card.actualTemp.toFixed(1)}<small>°C</small>`;
+                    document.getElementById(`status-text-${card.id}`).textContent = card.statusText;
+                    
+                    const deviationEl = document.getElementById(`deviation-info-${card.id}`);
+                    const deviationSign = card.deviation >= 0 ? '+' : '';
+                    deviationEl.innerHTML = `Desvio: <span>${deviationSign}${card.deviation.toFixed(1)}°C</span>`;
+                    deviationEl.className = 'deviation-info'; // Reseta classes de cor do desvio
+                    if (card.deviation > 0) deviationEl.classList.add('positive');
+                    if (card.deviation < 0) deviationEl.classList.add('negative');
+
+
+                    setTimeout(() => {
+                        cardElement.classList.remove('flash');
+                    }, 400); // Duração do flash
+                }
+            });
+
+            const cardElements = Array.from(chartsGrid.querySelectorAll('.chart-card'));
+            cardElements.sort((a, b) => {
+                // Prioridade de Ordenação: Crítico > Alerta > Normal. Dentro disso, maior temp.
+                const statusOrder = { critical: 2, warning: 1, normal: 0 };
+                const statusA = cardData.find(c => c.id === a.id)?.status || 'normal';
+                const statusB = cardData.find(c => c.id === b.id)?.status || 'normal';
+
+                if (statusOrder[statusA] !== statusOrder[statusB]) {
+                    return statusOrder[statusB] - statusOrder[statusA]; // Mais crítico primeiro
+                }
+                // Se o status for o mesmo, ordena pela temperatura (maior primeiro)
+                const tempA = parseFloat(a.getAttribute('data-current-temp'));
+                const tempB = parseFloat(b.getAttribute('data-current-temp'));
+                return tempB - tempA;
+            });
+
+            cardElements.forEach(el => chartsGrid.appendChild(el));
+        }
+
+        initializeCards();
+        setInterval(updateTemperaturesAndReorder, 2500); // Intervalo um pouco menor
+
+    </script>
+</body>
+</html>

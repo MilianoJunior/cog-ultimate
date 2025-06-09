@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+<script>
+    const socket = io();
+    socket.on('connect', function() {
+        console.log('Conectado ao servidor SocketIO');
+    });
+
+    socket.on('atualizar', function(data) {
+        console.log('Atualização recebida para o arquivo:', data.arquivo);
+        location.reload();
+    });
+    const eventSource = new EventSource('/stream');
+
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        const cardGraphContent = document.getElementById('card-graph-content');
+        const cardTemperatureContent = document.getElementById('card-temperature-content');
+        if (cardGraphContent) {
+            cardGraphContent.innerHTML = data.html_potencia_ativa;
+        }
+        if (cardTemperatureContent) {
+            cardTemperatureContent.innerHTML = data.html_temperature;
+        }
+        // // console.log('data: ', data)
+        // const cardGraph = document.getElementById('card-graph');
+        // const cardTemperature = document.getElementById('card-temperature');
+        // // console.log('cardGraph: ', cardGraph)
+        // // console.log('cardTemperature: ', cardTemperature)
+        // // console.log('data.html: ', data.html)
+        // if (cardTemperature) {
+        //     cardTemperature.innerHTML = data.html_temperature;
+        // }
+        // console.log('data.html_temperature: ', data.html_temperature)
+        // if (cardGraph) {
+        //     cardGraph.innerHTML = data.html_potencia_ativa;
+        // }
+        
+    };
+</script>
+</body>
+</html> 
