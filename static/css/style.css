@@ -246,131 +246,76 @@
     border-left: 4px solid var(--primary);
 }
 
-/* Container principal da barra de temperatura */
-.card-temperature-content .bar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-    gap: 15px;
+/* SVG Temperature Chart Container */
+.card-temperature-content .temp-chart-container {
     width: 100%;
-    background: var(--purple);
-    box-shadow: 0px 4px 8px var(--black-5);
-    border-radius: 8px;
-}
-
-/* Container das barras de histórico */
-.card-temperature-content .bar-temp {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 8px;
-    gap: 4px;
-    flex: 1;
-    height: 80px;
-    background: var(--purple);
+    justify-content: center; /* Center SVG if it's smaller than container */
+    align-items: center;
+    margin-bottom: 10px; /* Space below chart, before numeric values */
+    background-color: var(--purple-50); /* Light background for chart area */
+    padding: 5px;
     border-radius: 4px;
 }
 
-/* Barra individual */
-.card-temperature-content .bars {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-    gap: 2px;
-    width: 16px;
-    flex: none;
+.temp-chart-svg {
+    /* Styles for the SVG element itself, if needed */
+    /* Example: border: 1px solid #eee; */
 }
 
-/* Retângulo da barra */
-.card-temperature-content .rectangle {
-    width: 4px;
-    background: #FF4747;
-    border-radius: 2px;
-    flex: none;
-    order: 0;
-    min-height: 20px;
-}
-
-/* Círculo no topo da barra */
-.card-temperature-content .ellipse {
-    width: 4px;
-    height: 4px;
-    background: #50C9F6;
-    border-radius: 50%;
-    flex: none;
-    order: 1;
-}
-
-/* Label de tempo */
-.card-temperature-content .time-label {
-    width: 16px;
-    height: auto;
+.temp-chart-svg text {
     font-family: var(--font-family);
-    font-style: normal;
-    font-weight: 500;
-    font-size: 8px;
-    line-height: 110%;
-    color: var(--black-1);
+    font-size: 10px;
+}
+
+/* Display for current, alarm, trip values below chart */
+.card-temperature-content .temp-values-display {
+    display: flex;
+    flex-direction: row; /* Arrange items horizontally */
+    justify-content: space-around; /* Distribute space */
+    width: 100%;
+    padding: 5px 0; /* Padding above/below the values */
+    gap: 5px; /* Gap between value boxes */
+}
+
+.card-temperature-content .temp-values-display > div { /* Style for .atual, .alarme-disp, .trip-disp */
+    display: flex;
+    flex-direction: column; /* Stack label and value vertically */
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 4px;
+    flex-grow: 1; /* Allow items to grow and share space */
     text-align: center;
-    flex: none;
-    order: 2;
-    margin-top: 4px;
 }
 
-/* Container dos valores de temperatura */
-.card-temperature-content .temperaturas {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    gap: 2px;
-    width: 60px;
-    flex: none;
+.card-temperature-content .temp-values-display .label {
+    font-size: 10px;
+    color: var(--black-3);
+    margin-bottom: 2px;
 }
 
-/* Temperatura atual (rosa) */
+.card-temperature-content .temp-values-display .value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--black-1);
+}
+
+
+/* Specific colors for Atual, Alarme, Trip display boxes */
 .card-temperature-content .atual {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: #E8A5B8;
-    border-radius: 4px;
+    background-color: #E8A5B8; /* Existing pinkish */
 }
 
-/* Temperatura de alarme (amarelo) */
-.card-temperature-content .alarme {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: var(--yellow);
-    border-radius: 4px;
+.card-temperature-content .alarme-disp { /* Renamed from .alarme to avoid conflict with alarm panel if any */
+    background-color: var(--yellow); /* Existing yellow */
 }
 
-/* Temperatura de trip (azul) */
-.card-temperature-content .trip {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: var(--blue-a);
-    border-radius: 4px;
+.card-temperature-content .trip-disp { /* Renamed from .trip */
+    background-color: var(--blue-a); /* Existing blue */
 }
 
-/* Texto dos valores de temperatura */
+/* Old text-value class, can be removed if not used elsewhere, or adapted */
 .card-temperature-content .text-value {
     font-family: var(--font-family);
     font-style: normal;
@@ -557,4 +502,140 @@
         font-size: 11px;
         padding: 6px 10px;
     }
+}
+
+/* Alarm Panel Styles */
+#alarm-panel-container {
+    width: 100%;
+    margin-top: 20px; /* Space above the panel */
+    padding: 15px;
+    background-color: var(--white-3); /* Light background for the container */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.alarm-filters {
+    display: flex;
+    gap: 10px; /* Spacing between filter dropdowns */
+    margin-bottom: 15px; /* Space below the filters, above the table */
+    padding: 10px;
+    background-color: var(--white-2); /* Slightly different background for filter area */
+    border-radius: 6px;
+}
+
+.alarm-filters select {
+    padding: 8px 12px;
+    border: 1px solid var(--black-5);
+    border-radius: 4px;
+    background-color: var(--white-1);
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--black-2);
+    cursor: pointer;
+    flex-grow: 1; /* Allows dropdowns to share space */
+    min-width: 150px; /* Minimum width for each dropdown */
+}
+
+.alarm-filters select:hover {
+    border-color: var(--black-3);
+}
+
+.alarm-filters select:focus {
+    outline: none;
+    border-color: var(--purple-a);
+    box-shadow: 0 0 0 2px var(--purple-50);
+}
+
+
+.alarm-panel-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--black-1);
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-1);
+    padding-bottom: 5px;
+}
+
+.alarm-panel-no-alarms p {
+    text-align: center;
+    font-size: 1em;
+    color: var(--black-2);
+    padding: 20px;
+}
+
+.alarm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.alarm-table th, .alarm-table td {
+    border: 1px solid var(--gray-1);
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.alarm-table th {
+    background-color: var(--white-2);
+    font-weight: 600;
+    color: var(--black-1);
+}
+
+/* Row hover effect */
+.alarm-table tbody tr:hover {
+    background-color: var(--purple-50);
+}
+
+/* Criticidade Styles */
+.criticidade-critica, .criticidade-crítica { /* Handle with or without accent */
+    background-color: #D32F2F; /* Darker Red */
+    color: white;
+    font-weight: bold;
+}
+.criticidade-critica-row td:first-child, .criticidade-crítica-row td:first-child {  border-left: 5px solid #D32F2F; }
+
+
+.criticidade-alta {
+    background-color: #F57C00; /* Orange */
+    color: white;
+    font-weight: bold;
+}
+.criticidade-alta-row td:first-child { border-left: 5px solid #F57C00; }
+
+
+.criticidade-media, .criticidade-média { /* Handle with or without accent */
+    background-color: #FFB300; /* Amber */
+    color: #333;
+}
+.criticidade-media-row td:first-child, .criticidade-média-row td:first-child { border-left: 5px solid #FFB300; }
+
+.criticidade-aviso {
+    background-color: #FFF9C4; /* Light Yellow / Cream */
+    color: #514E3C; /* Darker yellow/brown for text */
+}
+.criticidade-aviso-row td:first-child { border-left: 5px solid #FFEB3B; } /* Brighter Yellow for border */
+
+
+.criticidade-baixa {
+    background-color: #7CB342; /* Light Green */
+    color: white;
+}
+.criticidade-baixa-row td:first-child { border-left: 5px solid #7CB342; }
+
+.criticidade-desconhecida {
+    background-color: #BDBDBD; /* Grey */
+    color: #333;
+}
+.criticidade-desconhecida-row td:first-child { border-left: 5px solid #BDBDBD; }
+
+/* Ensure table cell content for criticality also gets the text color */
+.alarm-table td.criticidade-critica, .alarm-table td.criticidade-crítica,
+.alarm-table td.criticidade-alta,
+.alarm-table td.criticidade-media, .alarm-table td.criticidade-média,
+.alarm-table td.criticidade-aviso,
+.alarm-table td.criticidade-baixa,
+.alarm-table td.criticidade-desconhecida {
+    /* Background is already set, this ensures text color if td has the class */
 }
