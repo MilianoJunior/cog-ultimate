@@ -20,25 +20,31 @@ leituras = {
                     "REAL": {
                         "Enrolamento Fase A": {
                             'value': 13469,
-                            'alarmes': 13989,
-                            'trip': 13925,
+                            'alarm_config': { 'register': 13989, 'criticidade': 'Média' },
+                            'trip_config': { 'register': 13925, 'criticidade': 'Crítica' },
+                            'alarm_threshold_value': 80.0,
+                            'trip_threshold_value': 90.0
                         },
                         "Enrolamento Fase B": {
                             'value': 13471,
-                            'alarmes': 13991,
-                            'trip': 13927,
+                            'alarm_config': { 'register': 13991, 'criticidade': 'Média' },
+                            'trip_config': { 'register': 13927, 'criticidade': 'Crítica' },
+                            'alarm_threshold_value': 80.0,
+                            'trip_threshold_value': 90.0
                         },
                         "Enrolamento Fase C": {
                             'value': 13473,
-                            'alarmes': 13993,
-                            'trip': 13929,
+                            'alarm_config': { 'register': 13993, 'criticidade': 'Média' },
+                            'trip_config': { 'register': 13929, 'criticidade': 'Crítica' },
+                            'alarm_threshold_value': 80.0,
+                            'trip_threshold_value': 90.0
                         },
                     }
                 },
                 "alarmes":{
                     "BOOLEAN": {
-                        "[01.00] - PCP-U1 - Botão de Emergência Acionado": 24289,
-                        "[01.01] - PCP-U1 - Botão de Emergência Acionado - SuperSEP": 24290,
+                        "[01.00] - PCP-U1 - Botão de Emergência Acionado": { "register": 24289, "criticidade": "Alta" },
+                        "[01.01] - PCP-U1 - Botão de Emergência Acionado - SuperSEP": { "register": 24290, "criticidade": "Crítica" }
                     }
                 },
                 "comandos":{
@@ -80,32 +86,43 @@ leituras = {
                     "REAL": {
                             "Enrolamento Fase A": {
                                 'value': 13455,
-                                'alarmes': 13975,
-                                'trip': 13911,
+                                'alarm_config': { 'register': 13975, 'criticidade': 'Média' },
+                                'trip_config': { 'register': 13911, 'criticidade': 'Crítica' },
+                                'alarm_threshold_value': 75.0,
+                                'trip_threshold_value': 85.0
                             },
                             "Enrolamento Fase B": {
                                 'value': 13457,
-                                'alarmes': 13977,
-                                'trip': 13913,
+                                'alarm_config': { 'register': 13977, 'criticidade': 'Média' },
+                                'trip_config': { 'register': 13913, 'criticidade': 'Crítica' },
+                                'alarm_threshold_value': 75.0,
+                                'trip_threshold_value': 85.0
                             },
                             "Enrolamento Fase C": {
                                 'value': 13459,
-                                'alarmes': 13979,
-                                'trip': 13915,
+                                'alarm_config': { 'register': 13979, 'criticidade': 'Média' },
+                                'trip_config': { 'register': 13915, 'criticidade': 'Crítica' },
+                                'alarm_threshold_value': 75.0,
+                                'trip_threshold_value': 85.0
                             },
                         },
                     },
                 # },
                 "alarmes":{
                     "BOOLEAN": {
-                        "[01.00] - PCP-U1 - Botão de Emergência Acionado": 24289,
-                        "[01.01] - PCP-U1 - Botão de Emergência Acionado - SuperSEP": 24290,
+                        "[01.00] - PCP-U1 - Botão de Emergência Acionado": { "register": 24289, "criticidade": "Alta" },
+                        "[01.01] - PCP-U1 - Botão de Emergência Acionado - SuperSEP": { "register": 24290, "criticidade": "Crítica" }
                     }
                 },
                 "comandos":{
                     "BOOLEAN": {
                         "Reset SuperSEP": 12529,
                         "CalaSirene SuperSEP": 12532,
+                        "LIGAR_UNIDADE": 1001,
+                        "DESLIGAR_UNIDADE": 1002
+                    },
+                    "REAL": {
+                        "AJUSTAR_POTENCIA": 2001
                     }
                 }
             },

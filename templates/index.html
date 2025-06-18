@@ -16,5 +16,188 @@
             </div>
         </div>
     </div>
+    <div id="alarm-panel-container" class="card-graph-content">
+        {# Alarm panel will be rendered here by Flask for initial load #}
+        {{ html_alarm_panel | safe }}
+    </div>
 <!-- </div> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sse = new EventSource('/stream');
+    const cardGraphContent = document.getElementById('card-graph-content');
+    const cardTemperatureContent = document.getElementById('card-temperature-content');
+    const alarmPanelContainer = document.getElementById('alarm-panel-container'); // Get alarm panel container
+
+    sse.onmessage = function(event) {
+        const eventData = JSON.parse(event.data);
+        if (cardGraphContent && eventData.html_potencia_ativa) {
+            cardGraphContent.innerHTML = eventData.html_potencia_ativa;
+        }
+        if (cardTemperatureContent && eventData.html_temperature) {
+            cardTemperatureContent.innerHTML = eventData.html_temperature;
+        }
+        if (alarmPanelContainer && eventData.html_alarm_panel) { // Update alarm panel
+            alarmPanelContainer.innerHTML = eventData.html_alarm_panel;
+            initializeAlarmFilters(); // Re-initialize/apply filters for new content
+        }
+    };
+
+    sse.onerror = function(error) {
+        console.error("EventSource failed:", error);
+        // Optionally, display a message to the user or attempt to reconnect
+        sse.close(); // Close the connection on error to prevent excessive retries by the browser
+    };
+
+
+    // --- Alarm Panel Filtering Logic ---
+    function applyAlarmFilters() {
+        const filterUsina = document.getElementById('filter-usina')?.value || 'all';
+        const filterUnidade = document.getElementById('filter-unidade')?.value || 'all';
+        const filterCriticidade = document.getElementById('filter-criticidade')?.value || 'all';
+        const alarmTableBody = document.getElementById('alarm-table-body-content');
+
+        if (!alarmTableBody) return;
+
+        console.log(`Applying filters: Usina=${filterUsina}, Unidade=${filterUnidade}, Criticidade=${filterCriticidade}`);
+
+        for (const row of alarmTableBody.getElementsByTagName('tr')) {
+            const usina = row.dataset.usina;
+            const unidade = row.dataset.unidade;
+            const criticidade = row.dataset.criticidade;
+
+            let showRow = true;
+            if (filterUsina !== 'all' && usina !== filterUsina) {
+                showRow = false;
+            }
+            if (filterUnidade !== 'all' && unidade !== filterUnidade) {
+                showRow = false;
+            }
+            if (filterCriticidade !== 'all' && criticidade !== filterCriticidade) {
+                showRow = false;
+            }
+
+            row.style.display = showRow ? '' : 'none';
+        }
+    }
+
+    function initializeAlarmFilters() {
+        const filterUsinaEl = document.getElementById('filter-usina');
+        const filterUnidadeEl = document.getElementById('filter-unidade');
+        const filterCriticidadeEl = document.getElementById('filter-criticidade');
+
+        if (filterUsinaEl) filterUsinaEl.addEventListener('change', applyAlarmFilters);
+        if (filterUnidadeEl) filterUnidadeEl.addEventListener('change', applyAlarmFilters);
+        if (filterCriticidadeEl) filterCriticidadeEl.addEventListener('change', applyAlarmFilters);
+
+        // Initial application of filters if any are set (e.g. by browser cache)
+        // Or if you want to default to a certain filter.
+        // For now, just ensure they are in a known state and apply.
+        applyAlarmFilters();
+    }
+
+    // Initial setup of alarm filters
+    initializeAlarmFilters();
+
+
+    // Delegated event listener for dynamically loaded content (BUTTONS).
+    document.body.addEventListener('click', function(event) {
+        if (event.target.classList.contains('btn-command')) {
+            const button = event.target;
+            // console.log("Button clicked:", button.outerHTML); // For debugging
+
+            const usinaId = button.dataset.usinaId;
+            const unidadeId = button.dataset.unidadeId;
+            const comando = button.dataset.comando;
+            let valor = null;
+
+            // Ensure usinaId, unidadeId, and comando are present
+            if (!usinaId || !unidadeId || !comando) {
+                console.error('Missing data attributes on button:', button);
+                alert('Erro: Informações incompletas no botão de comando (usina, unidade ou comando ausente).');
+                return;
+            }
+
+            if (comando === 'AJUSTAR_POTENCIA') {
+                const inputId = button.dataset.inputId;
+                if (!inputId) {
+                    console.error('Missing data-input-id for AJUSTAR_POTENCIA on button:', button);
+                    alert('Erro: Botão de ajuste de potência mal configurado (sem ID de input).');
+                    return;
+                }
+                const inputElement = document.getElementById(inputId);
+                if (!inputElement) {
+                    console.error('Input element not found for ID:', inputId);
+                    alert(`Erro: Elemento de input com ID '${inputId}' não encontrado.`);
+                    return;
+                }
+                valor = inputElement.value;
+
+                if (valor === null || String(valor).trim() === '') {
+                    alert('Por favor, insira um valor para ajustar a potência.');
+                    inputElement.focus();
+                    return;
+                }
+                // Validate if it's a number for safety, though type="number" helps
+                if (isNaN(parseFloat(valor))) {
+                    alert('Por favor, insira um valor numérico para a potência.');
+                    inputElement.focus();
+                    return;
+                }
+            }
+
+            const confirmMessage = `Você tem certeza que deseja executar o comando '${comando}' na unidade '${unidadeId}' da usina '${usinaId}'?` +
+                                 (valor !== null ? ` Valor: ${valor}` : '');
+
+            if (!confirm(confirmMessage)) {
+                console.log("Comando cancelado pelo usuário.");
+                return;
+            }
+
+            console.log(`Enviando comando: Usina=${usinaId}, Unidade=${unidadeId}, Comando=${comando}, Valor=${valor}`);
+
+            const apiUrl = `/api/command/${usinaId}/${unidadeId}/${comando}`;
+            const fetchOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (valor !== null) {
+                fetchOptions.body = JSON.stringify({ valor: valor });
+            } else {
+                // For commands like LIGAR/DESLIGAR, ensure an empty JSON body is sent if no valor.
+                // If Content-Type is application/json, an empty or no body might be an issue for some servers/frameworks,
+                // but Flask's request.get_json(silent=True) handles it.
+                // Sending an empty JSON object {} if valor is null and method is POST with JSON content type.
+                 fetchOptions.body = JSON.stringify({});
+            }
+
+            fetch(apiUrl, fetchOptions)
+                .then(response => {
+                    return response.json().then(data => { // Always parse JSON
+                        if (!response.ok) {
+                            // Throw an error object that includes status and message
+                            const error = new Error(data.message || `Erro ${response.status} ao enviar comando`);
+                            error.response = data; // Attach full response data to error
+                            error.status = response.status;
+                            throw error;
+                        }
+                        return data; // This is the success data
+                    });
+                })
+                .then(data => { // data is already parsed from the previous .then()
+                    alert(data.message || 'Comando processado com sucesso!');
+                    console.log('Resposta do comando:', data);
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar comando:', error);
+                    // error.message should now be more informative from the .then(response => ...) block
+                    alert(`Erro: ${error.message}`);
+                });
+        }
+    });
+});
+</script>
 {% endblock %}

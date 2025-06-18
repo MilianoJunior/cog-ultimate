@@ -1,3 +1,4 @@
+import logging
 from flask import Flask
 # from livereload import Server
 import os
@@ -8,6 +9,18 @@ import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
+    handlers=[
+        logging.FileHandler("command_audit.log"),
+        # logging.StreamHandler() # Optionally add stream handler to see logs in console
+    ]
+)
+logger = logging.getLogger(__name__)
+logger.info("Aplicação iniciada e logger configurado.")
 
 # Importa as rotas depois de criar a aplicação
 from routes.routes import *

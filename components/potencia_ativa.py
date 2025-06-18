@@ -32,15 +32,32 @@ class CardGraph:
                 msg = 'Desconectado'
                 width = 0
                 color = 'var(--red)'
-  
+
+            # Extrair usina_id e unidade_id do título
+            title_parts = line['title'].split(" - ")
+            usina_id = title_parts[0] if len(title_parts) > 0 else "DESCONHECIDA"
+            unidade_id = title_parts[1] if len(title_parts) > 1 else "DESCONHECIDA"
+
             html += f"""
-                <div class="line-title">
-                    <p class="line-title-text">{line['title']}</p>
-                </div>
-                <div class="line-value">
-                    <div class="line-value-bar" style="width: {width}%"></div>
-                    <span class="line-title-value" style="background-color: {color};">{msg}</span>
-                    <span class="line-title-value-max">{line['potencia_maxima']} {line.get("tipo", "kVA")}</span>
+                <div class="line-item">
+                    <div class="line-info">
+                        <div class="line-title">
+                            <p class="line-title-text">{line['title']}</p>
+                        </div>
+                        <div class="line-value">
+                            <div class="line-value-bar" style="width: {width}%"></div>
+                            <span class="line-title-value" style="background-color: {color};">{msg}</span>
+                            <span class="line-title-value-max">{line['potencia_maxima']} {line.get("tipo", "kVA")}</span>
+                        </div>
+                    </div>
+                    <div class="line-controls">
+                        <button class="btn-command" data-usina-id="{usina_id}" data-unidade-id="{unidade_id}" data-comando="LIGAR">Ligar</button>
+                        <button class="btn-command" data-usina-id="{usina_id}" data-unidade-id="{unidade_id}" data-comando="DESLIGAR">Desligar</button>
+                        <div class="control-group">
+                            <input type="number" class="input-potencia" placeholder="Potência (%)" id="potencia-{usina_id}-{unidade_id}">
+                            <button class="btn-command btn-ajustar" data-usina-id="{usina_id}" data-unidade-id="{unidade_id}" data-comando="AJUSTAR_POTENCIA" data-input-id="potencia-{usina_id}-{unidade_id}">Enviar</button>
+                        </div>
+                    </div>
                 </div>
                 """
         html += "</div>"
@@ -63,7 +80,7 @@ class CardGraph:
     
     def html(self):
         # retirar o espaço em branco do html e caracteres que não são permitidos no html
-        html = ''
-        for line in self.render().split('\n'):
-            html += line.strip()
+        raw_html = self.render()
+        # Minify HTML by removing unnecessary whitespace
+        html = ' '.join(raw_html.split())
         return html
