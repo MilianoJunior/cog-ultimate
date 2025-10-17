@@ -5,6 +5,7 @@ from flask_socketio import SocketIO
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import threading
+from models.load_data import verify_all_connections
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -34,10 +35,22 @@ def start_observer():
     observer.start()
     observer.join()
 
+
+
 # Inicia o observador em uma thread separada
 threading.Thread(target=start_observer, daemon=True).start()
 
 if __name__ == "__main__":
-    # Inicia o servidor com suporte a SocketIO
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    try:
+        print('Iniciando servidor...')
+        # Inicia o servidor com suporte a SocketIO
+        socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    except KeyboardInterrupt:
+        print('Servidor encerrado pelo usuário')
+    except Exception as e:
+        print('Erro ao iniciar servidor: ', e)
+    finally:
+        print('Servidor encerrado')
+        # verify_all_connections()
+
 

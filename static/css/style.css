@@ -30,6 +30,18 @@
     background-color: var(--white-2);
 }
 
+.header-usina {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    background-color: var(--white-1);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px 0 var(--black-5);
+}
+
 /* #card-graph {
     max-width: 800px;
     margin: 0 auto;
@@ -59,7 +71,7 @@
 .card-graph-content {
     display: flex;
     flex-direction: column;
-    min-width: 600px;
+    min-width: 800px;
     gap: 10px;
     background-color: var(--white-3);
     border-radius: 10px;
@@ -204,184 +216,6 @@
     margin-top: 10px;
 }
 
-/* Temperaturas */
-
-/* Container individual de temperatura */
-.card-temperature-content .container-temperatura {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-    gap: 1px;
-    width: 100%;
-    background: var(--white-1);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px var(--black-6);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-temperature-content .container-temperatura:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--black-5);
-}
-
-/* Área de descrição do mancal */
-.card-temperature-content .describe {
-    width: 100%;
-    /* margin-bottom: 8px; */
-}
-
-.card-temperature-content .mancal-guia {
-    font-family: var(--font-family);
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 120%;
-    color: var(--black-1);
-    margin-bottom: 10px;
-    text-align: center;
-    padding: 8px 12px;
-    background: var(--purple-50);
-    border-radius: 6px;
-    border-left: 4px solid var(--primary);
-}
-
-/* Container principal da barra de temperatura */
-.card-temperature-content .bar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-    gap: 15px;
-    width: 100%;
-    background: var(--purple);
-    box-shadow: 0px 4px 8px var(--black-5);
-    border-radius: 8px;
-}
-
-/* Container das barras de histórico */
-.card-temperature-content .bar-temp {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 8px;
-    gap: 4px;
-    flex: 1;
-    height: 80px;
-    background: var(--purple);
-    border-radius: 4px;
-}
-
-/* Barra individual */
-.card-temperature-content .bars {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-    gap: 2px;
-    width: 16px;
-    flex: none;
-}
-
-/* Retângulo da barra */
-.card-temperature-content .rectangle {
-    width: 4px;
-    background: #FF4747;
-    border-radius: 2px;
-    flex: none;
-    order: 0;
-    min-height: 20px;
-}
-
-/* Círculo no topo da barra */
-.card-temperature-content .ellipse {
-    width: 4px;
-    height: 4px;
-    background: #50C9F6;
-    border-radius: 50%;
-    flex: none;
-    order: 1;
-}
-
-/* Label de tempo */
-.card-temperature-content .time-label {
-    width: 16px;
-    height: auto;
-    font-family: var(--font-family);
-    font-style: normal;
-    font-weight: 500;
-    font-size: 8px;
-    line-height: 110%;
-    color: var(--black-1);
-    text-align: center;
-    flex: none;
-    order: 2;
-    margin-top: 4px;
-}
-
-/* Container dos valores de temperatura */
-.card-temperature-content .temperaturas {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0;
-    gap: 2px;
-    width: 60px;
-    flex: none;
-}
-
-/* Temperatura atual (rosa) */
-.card-temperature-content .atual {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: #E8A5B8;
-    border-radius: 4px;
-}
-
-/* Temperatura de alarme (amarelo) */
-.card-temperature-content .alarme {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: var(--yellow);
-    border-radius: 4px;
-}
-
-/* Temperatura de trip (azul) */
-.card-temperature-content .trip {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 4px 8px;
-    width: 100%;
-    height: 24px;
-    background-color: var(--blue-a);
-    border-radius: 4px;
-}
-
-/* Texto dos valores de temperatura */
-.card-temperature-content .text-value {
-    font-family: var(--font-family);
-    font-style: normal;
-    font-weight: 600;
-    font-size: 11px;
-    line-height: 100%;
-    color: var(--black-1);
-    text-align: center;
-    white-space: nowrap;
-}
-
 /* Classes auxiliares (mantidas para compatibilidade) */
 .value {
     display: flex;
@@ -433,7 +267,7 @@
 .setpoint {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     padding: 3px;
     gap: 10px;

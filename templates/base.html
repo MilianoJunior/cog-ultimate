@@ -7,11 +7,26 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/temperatura.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </head>
 <body>
+    <!-- <div class="container-menu"> -->
+    <header class="header-usina">
+        <select class="btn-select" id="select-usina">
+            <option value="0">Todas</option>
+            <option value="1">Pedras</option>
+            <option value="2">Aparecida</option>
+            <option value="3">FAE</option>
+            <option value="4">Picadas</option>
+            <option value="5">Hoppen</option>
+        </select>
+    </header>
+    </div>
     {% block content %}{% endblock %}
 <script>
     const socket = io();
@@ -34,22 +49,19 @@
         }
         if (cardTemperatureContent) {
             cardTemperatureContent.innerHTML = data.html_temperature;
-        }
-        // // console.log('data: ', data)
-        // const cardGraph = document.getElementById('card-graph');
-        // const cardTemperature = document.getElementById('card-temperature');
-        // // console.log('cardGraph: ', cardGraph)
-        // // console.log('cardTemperature: ', cardTemperature)
-        // // console.log('data.html: ', data.html)
-        // if (cardTemperature) {
-        //     cardTemperature.innerHTML = data.html_temperature;
-        // }
-        // console.log('data.html_temperature: ', data.html_temperature)
-        // if (cardGraph) {
-        //     cardGraph.innerHTML = data.html_potencia_ativa;
-        // }
-        
+        }        
     };
+    // enviar uma mensagem para o servidor sobre a escolha do usuario de ver um usina especifica ou todas
+    document.getElementById('select-usina').addEventListener('change', function() {
+        const usina = this.value;
+        fetch('/usina', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ usina })
+        });
+    });
 </script>
 </body>
 </html> 
