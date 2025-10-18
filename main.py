@@ -2,13 +2,14 @@ from flask import Flask
 # from livereload import Server
 import os
 from flask_socketio import SocketIO
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-import threading
-from models.load_data import verify_all_connections
+# from watchdog.observers import Observer
+# from watchdog.events import FileSystemEventHandler
+# import threading
+# from models.load_data import verify_all_connections
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+# app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change-me')
 
 # Importa as rotas depois de criar a aplicação
 from routes.routes import *
@@ -17,28 +18,28 @@ from routes.routes import *
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Exemplo de evento para atualizar o cliente
-@socketio.on('connect')
-def handle_connect():
-    pass
+# @socketio.on('connect')
+# def handle_connect():
+#     pass
 
-# Classe para lidar com eventos de mudança de arquivo
-class ChangeHandler(FileSystemEventHandler):
-    def on_modified(self, event):
-        if event.src_path.endswith('.css') or event.src_path.endswith('.html'):
-            socketio.emit('atualizar', {'arquivo': event.src_path})
+# # Classe para lidar com eventos de mudança de arquivo
+# class ChangeHandler(FileSystemEventHandler):
+#     def on_modified(self, event):
+#         if event.src_path.endswith('.css') or event.src_path.endswith('.html'):
+#             socketio.emit('atualizar', {'arquivo': event.src_path})
 
 # Função para iniciar o observador
-def start_observer():
-    event_handler = ChangeHandler()
-    observer = Observer()
-    observer.schedule(event_handler, path='.', recursive=True)
-    observer.start()
-    observer.join()
+# def start_observer():
+#     event_handler = ChangeHandler()
+#     observer = Observer()
+#     observer.schedule(event_handler, path='.', recursive=True)
+#     observer.start()
+#     observer.join()
 
 
 
 # Inicia o observador em uma thread separada
-threading.Thread(target=start_observer, daemon=True).start()
+# threading.Thread(target=start_observer, daemon=True).start()
 
 if __name__ == "__main__":
     try:
