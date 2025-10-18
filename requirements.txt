@@ -17,3 +17,5 @@ python-socketio>=5.0
 simple-websocket>=1.0
 six>=1.16
 idna>=3.0 
+eventlet
+gunicorn
